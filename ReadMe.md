@@ -1,0 +1,1 @@
+Use vcpkg & visual studio to link 3rd party libraries.
