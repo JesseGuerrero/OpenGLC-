@@ -23,4 +23,8 @@ endmacro()
 
 add_executable_and_libs(01Window 01Window.cpp)
 add_executable_and_libs(02Dot 02Dot.cpp)
+add_executable_and_libs(02Dots 02Dots.cpp)
+add_executable_and_libs(02DotsRandom 02DotsRandom.cpp)
+add_executable_and_libs(02Line 02Line.cpp)
+add_executable_and_libs(02Lines 02Lines.cpp)
 add_executable_and_libs(03Triangle 03Triangle.cpp)

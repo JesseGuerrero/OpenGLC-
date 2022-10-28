@@ -5,6 +5,16 @@
 
 GLuint VBO;
 
+static void CreateVertexBuffer()
+{
+    Vector3f Vertices[1];
+    Vertices[0] = Vector3f(0.0f, 0.0f, 0.0f);
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+}
+
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -21,18 +31,6 @@ static void RenderSceneCB()
 
     glutSwapBuffers();
 }
-
-
-static void CreateVertexBuffer()
-{
-    Vector3f Vertices[1];
-    Vertices[0] = Vector3f(0.0f, 0.0f, 0.0f);
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-}
-
 
 int main(int argc, char** argv)
 {
@@ -62,7 +60,7 @@ int main(int argc, char** argv)
 
     glutDisplayFunc(RenderSceneCB);
 
-    glutMainLoop(); //Begins all call backs, such as display function and loops them
+    glutMainLoop();
 
     return 0;
 }
