@@ -15,9 +15,12 @@ static void RenderSceneCB()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -29,10 +32,13 @@ static void RenderSceneCB()
 
 static void CreateVertexBuffer()
 {
-    Vector3f Vertices[3];
+    Vector3f Vertices[6];
     Vertices[0] = Vector3f(-1.0f, -1.0f, 0.0f);   // bottom left
-    Vertices[1] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
-    Vertices[2] = Vector3f(0.0f, 1.0f, 0.0f);     // top
+    Vertices[1] = Vector3f(1.0f, 0.0f, 0.0f);   // color
+    Vertices[2] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
+    Vertices[3] = Vector3f(0.0f, 1.0f, 0.0f);   // color
+    Vertices[4] = Vector3f(0.0f, 1.0f, 0.0f);     // top
+    Vertices[5] = Vector3f(0.0f, 0.0f, 1.0f);   // color
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -71,8 +77,8 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
     glAttachShader(ShaderProgram, ShaderObj);
 }
 
-const char* pVSFileName = "Shaders/ShadersVertex.glsl";
-const char* pFSFileName = "Shaders/ShadersFragment.glsl";
+const char* pVSFileName = "Shaders/ShadersVertexColors.glsl";
+const char* pFSFileName = "Shaders/ShadersFragmentColors.glsl";
 
 static void CompileShaders()
 {
