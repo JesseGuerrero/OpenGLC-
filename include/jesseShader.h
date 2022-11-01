@@ -7,11 +7,12 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "ogldev_math_3d.h"
 
 class Shader
 {
 public:
-    unsigned int ID;
+    unsigned int ptrToShader;
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     Shader(const char* vertexPath, const char* fragmentPath)
@@ -59,11 +60,11 @@ public:
         glCompileShader(fragment);
         checkCompileErrors(fragment, "FRAGMENT");
         // shader Program
-        ID = glCreateProgram();
-        glAttachShader(ID, vertex);
-        glAttachShader(ID, fragment);
-        glLinkProgram(ID);
-        checkCompileErrors(ID, "PROGRAM");
+        ptrToShader = glCreateProgram();
+        glAttachShader(ptrToShader, vertex);
+        glAttachShader(ptrToShader, fragment);
+        glLinkProgram(ptrToShader);
+        checkCompileErrors(ptrToShader, "PROGRAM");
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex);
         glDeleteShader(fragment);
@@ -72,23 +73,28 @@ public:
     // ------------------------------------------------------------------------
     void use()
     {
-        glUseProgram(ID);
+        glUseProgram(ptrToShader);
     }
     // utility uniform functions
     // ------------------------------------------------------------------------
     void setBool(const std::string &name, bool value) const
     {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+        glUniform1i(glGetUniformLocation(ptrToShader, name.c_str()), (int)value);
     }
     // ------------------------------------------------------------------------
     void setInt(const std::string &name, int value) const
     {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+        glUniform1i(glGetUniformLocation(ptrToShader, name.c_str()), value);
     }
     // ------------------------------------------------------------------------
     void setFloat(const std::string &name, float value) const
     {
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+        glUniform1f(glGetUniformLocation(ptrToShader, name.c_str()), value);
+    }
+    // ------------------------------------------------------------------------
+    void setMatf4(const std::string &name, Matrix4f& value) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ptrToShader, name.c_str()), 1, GL_TRUE, value);
     }
 
 private:
