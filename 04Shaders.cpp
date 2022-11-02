@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-#include "ogldev_math_3d.h"
+#include "ogldev/ogldev_math_3d.h"
 #include "jesse.h"
 
 GLuint VBO;

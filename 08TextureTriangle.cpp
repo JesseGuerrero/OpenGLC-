@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <jesseShader.h>
 #include <GL/freeglut.h>
-#include "ogldev_math_3d.h"
+#include "ogldev/ogldev_math_3d.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <learnopengl/stb_image.h>

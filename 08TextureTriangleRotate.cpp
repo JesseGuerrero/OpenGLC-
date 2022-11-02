@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <jesseShader.h>
 #include <GL/freeglut.h>
-#include "ogldev_math_3d.h"
+#include "ogldev/ogldev_math_3d.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <learnopengl/stb_image.h>
@@ -85,21 +85,21 @@ static void RenderSceneCB()
     // render container
     (*ourShader).use();
 
-    gRotationLocation = glGetUniformLocation(ourShader->ptrToShader, "gRotation");
-    if (gRotationLocation == -1) {
-        printf("Error getting uniform location of 'gRotation'\n");
-        exit(1);
-    }
-    static float AngleInRadians = 0.0f;
-    static float Delta = 0.01f;
-
-    AngleInRadians += Delta;
-    Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
-                      sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
-                      0.0,                  0.0f,                  1.0f, 0.0f,
-                      0.0f,                 0.0f,                  0.0f, 1.0f);
-
-    glUniformMatrix4fv(gRotationLocation, 1, GL_TRUE, &Rotation.m[0][0]);
+//    gRotationLocation = glGetUniformLocation(ourShader->ptrToShader, "gRotation");
+//    if (gRotationLocation == -1) {
+//        printf("Error getting uniform location of 'gRotation'\n");
+//        exit(1);
+//    }
+//    static float AngleInRadians = 0.0f;
+//    static float Delta = 0.01f;
+//
+//    AngleInRadians += Delta;
+//    Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
+//                      sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
+//                      0.0,                  0.0f,                  1.0f, 0.0f,
+//                      0.0f,                 0.0f,                  0.0f, 1.0f);
+//
+//    glUniformMatrix4fv(gRotationLocation, 1, GL_TRUE, &Rotation.m[0][0]);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
