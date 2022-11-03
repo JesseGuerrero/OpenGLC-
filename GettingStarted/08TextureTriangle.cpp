@@ -4,7 +4,7 @@
 #include "ogldev/ogldev_math_3d.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "learnopengl/stb_image.h"
+#include "stb_image.h"
 #include "learnopengl/filesystem.h"
 
 

@@ -1,0 +1,5 @@
+{
+  "name": "cppopengl",
+  "version-string": "0.1.0",
+  "dependencies": [ "assimp", "freeglut", "glew", "glad", "glfw3", "glm", "opengl" ]
+}
