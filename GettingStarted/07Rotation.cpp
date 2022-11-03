@@ -6,29 +6,29 @@
 #include <GL/freeglut.h>
 
 #include "ogldev/ogldev_math_3d.h"
-#include "jesse.h"
+#include "ogldev/jesse/jesse.h"
 
 GLuint VBO;
-GLint gTranslationLocation;
+GLint gRotationLocation;
 
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    static float Scale = 0.0f;
-    static float Delta = 0.005f;
+    static float AngleInRadians = 0.0f;
+    static float Delta = 0.01f;
 
-    Scale += Delta;
-    if ((Scale >= 0.8f) || (Scale <= -0.8f)) {
+    AngleInRadians += Delta;
+    if ((AngleInRadians >= 1.5708f) || (AngleInRadians <= -1.5708f)) {
         Delta *= -1.0f;
     }
 
-    Matrix4f Translation(1.0f, 0.0f, 0.0f, Scale,
-                         0.0f, 1.0f, 0.0f, Scale,
-                         0.0f, 0.0f, 1.0f, 0.0,
-                         0.0f, 0.0f, 0.0f, 1.0f);
+    Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
+                      sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
+                      0.0,                  0.0f,                  1.0f, 0.0f,
+                      0.0f,                 0.0f,                  0.0f, 1.0f);
 
-    glUniformMatrix4fv(gTranslationLocation, 1, GL_TRUE, &Translation.m[0][0]);
+    glUniformMatrix4fv(gRotationLocation, 1, GL_TRUE, &Rotation.m[0][0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -49,9 +49,9 @@ static void RenderSceneCB()
 static void CreateVertexBuffer()
 {
     Vector3f Vertices[3];
-    Vertices[0] = Vector3f(-0.3f, -0.3f, 0.0f);   // bottom left
-    Vertices[1] = Vector3f(0.3f, -0.3f, 0.0f);    // bottom right
-    Vertices[2] = Vector3f(0.0f, 0.3f, 0.0f);     // top
+    Vertices[0] = Vector3f(-1.0f, -1.0f, 0.0f);   // bottom left
+    Vertices[1] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
+    Vertices[2] = Vector3f(0.0f, 1.0f, 0.0f);     // top
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -90,8 +90,8 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
     glAttachShader(ShaderProgram, ShaderObj);
 }
 
-const char* pVSFileName = "Shaders/TranslationVertex.glsl";
-const char* pFSFileName = "Shaders/TranslationFragment.glsl";
+const char* pVSFileName = "Shaders/RotationVertex.glsl";
+const char* pFSFileName = "Shaders/RotationFragment.glsl";
 
 static void CompileShaders()
 {
@@ -104,6 +104,7 @@ static void CompileShaders()
 
     std::string vs = ReadFileJesse(pVSFileName);
     std::string fs = ReadFileJesse(pFSFileName);
+
     AddShader(ShaderProgram, vs.c_str(), GL_VERTEX_SHADER);
     AddShader(ShaderProgram, fs.c_str(), GL_FRAGMENT_SHADER);
 
@@ -119,9 +120,9 @@ static void CompileShaders()
         exit(1);
     }
 
-    gTranslationLocation = glGetUniformLocation(ShaderProgram, "gTranslation");
-    if (gTranslationLocation == -1) {
-        printf("Error getting uniform location of 'gTranslation'\n");
+    gRotationLocation = glGetUniformLocation(ShaderProgram, "gRotation");
+    if (gRotationLocation == -1) {
+        printf("Error getting uniform location of 'gRotation'\n");
         exit(1);
     }
 
@@ -140,14 +141,14 @@ int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
-    int width = 800;
-    int height = 600;
+    int width = 1920;
+    int height = 1080;
     glutInitWindowSize(width, height);
 
-    int x = 100;
+    int x = 200;
     int y = 100;
     glutInitWindowPosition(x, y);
-    int win = glutCreateWindow("Tutorial 06");
+    int win = glutCreateWindow("Tutorial 07");
     printf("window id: %d\n", win);
 
     // Must be done after glut is initialized!

@@ -10,7 +10,7 @@
 
 
 #include "ogldev/ogldev_math_3d.h"
-#include "jesseShader.h"
+#include "ogldev/jesse/jesseShader.h"
 
 GLuint VBO;
 GLint gRotationLocation;

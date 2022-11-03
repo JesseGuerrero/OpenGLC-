@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <jesseShader.h>
+#include "ogldev/jesse/jesseShader.h"
 #include <GL/freeglut.h>
 #include "ogldev/ogldev_math_3d.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <learnopengl/stb_image.h>
-#include <learnopengl/filesystem.h>
+#include "learnopengl/stb_image.h"
+#include "learnopengl/filesystem.h"
 
 
 unsigned int VBO, VAO, EBO;

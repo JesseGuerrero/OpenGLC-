@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <jesseShader.h>
+#include "ogldev/jesse/jesseShader.h"
 #include <GL/freeglut.h>
 #include "ogldev/ogldev_math_3d.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <learnopengl/stb_image.h>
-#include <learnopengl/filesystem.h>
+#include "learnopengl/stb_image.h"
+#include "learnopengl/filesystem.h"
 
 
 unsigned int VBO, VAO, EBO;
@@ -18,25 +18,17 @@ static void CreateVertexBuffer()
     ourShader = (Shader*)(new Shader("Shaders/TextureTriangleRotateVertex.glsl", "Shaders/TextureTriangleRotateFragment.glsl"));
     float Vertices[] = {
             // positions                         // colors                    // texture coords
-            -0.5f,  -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   -1.0f, -1.0f, // bottom left
-            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, -1.0f, // bottom right
-            0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // top
-    };
-
-    unsigned int indices[] = {
-            0, 1, 2, // first triangle
+            -1.0f,  -1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   -1.0f, -1.0f, // bottom left
+            1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, -1.0f, // bottom right
+            0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // top
     };
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -85,24 +77,24 @@ static void RenderSceneCB()
     // render container
     (*ourShader).use();
 
-//    gRotationLocation = glGetUniformLocation(ourShader->ptrToShader, "gRotation");
-//    if (gRotationLocation == -1) {
-//        printf("Error getting uniform location of 'gRotation'\n");
-//        exit(1);
-//    }
-//    static float AngleInRadians = 0.0f;
-//    static float Delta = 0.01f;
-//
-//    AngleInRadians += Delta;
-//    Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
-//                      sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
-//                      0.0,                  0.0f,                  1.0f, 0.0f,
-//                      0.0f,                 0.0f,                  0.0f, 1.0f);
-//
-//    glUniformMatrix4fv(gRotationLocation, 1, GL_TRUE, &Rotation.m[0][0]);
+    gRotationLocation = glGetUniformLocation(ourShader->ptrToShader, "gRotation");
+    if (gRotationLocation == -1) {
+        printf("Error getting uniform location of 'gRotation'\n");
+        exit(1);
+    }
+    static float AngleInRadians = 0.0f;
+    static float Delta = 0.01f;
+
+    AngleInRadians += Delta;
+    Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
+                      sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
+                      0.0,                  0.0f,                  1.0f, 0.0f,
+                      0.0f,                 0.0f,                  0.0f, 1.0f);
+
+    glUniformMatrix4fv(gRotationLocation, 1, GL_TRUE, &Rotation.m[0][0]);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
     glutPostRedisplay();
     glutSwapBuffers();
 }

@@ -1,46 +1,30 @@
 #include <stdio.h>
 #include <string.h>
-
-#include <math.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
 #include "ogldev/ogldev_math_3d.h"
-#include "jesse.h"
+#include "ogldev/jesse/jesse.h"
 
 GLuint VBO;
-GLint gRotationLocation;
+
 
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    static float AngleInRadians = 0.0f;
-    static float Delta = 0.01f;
-
-    AngleInRadians += Delta;
-    if ((AngleInRadians >= 1.5708f) || (AngleInRadians <= -1.5708f)) {
-        Delta *= -1.0f;
-    }
-
-    Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
-                      sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
-                      0.0,                  0.0f,                  1.0f, 0.0f,
-                      0.0f,                 0.0f,                  0.0f, 1.0f);
-
-    glUniformMatrix4fv(gRotationLocation, 1, GL_TRUE, &Rotation.m[0][0]);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glDisableVertexAttribArray(0);
-
-    glutPostRedisplay();
 
     glutSwapBuffers();
 }
@@ -48,10 +32,13 @@ static void RenderSceneCB()
 
 static void CreateVertexBuffer()
 {
-    Vector3f Vertices[3];
+    Vector3f Vertices[6];
     Vertices[0] = Vector3f(-1.0f, -1.0f, 0.0f);   // bottom left
-    Vertices[1] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
-    Vertices[2] = Vector3f(0.0f, 1.0f, 0.0f);     // top
+    Vertices[1] = Vector3f(1.0f, 0.0f, 0.0f);   // color
+    Vertices[2] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
+    Vertices[3] = Vector3f(0.0f, 1.0f, 0.0f);   // color
+    Vertices[4] = Vector3f(0.0f, 1.0f, 0.0f);     // top
+    Vertices[5] = Vector3f(0.0f, 0.0f, 1.0f);   // color
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -64,7 +51,7 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
 
     if (ShaderObj == 0) {
         fprintf(stderr, "Error creating shader type %d\n", ShaderType);
-        exit(1);
+        exit(0);
     }
 
     const GLchar* p[1];
@@ -90,8 +77,8 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
     glAttachShader(ShaderProgram, ShaderObj);
 }
 
-const char* pVSFileName = "Shaders/RotationVertex.glsl";
-const char* pFSFileName = "Shaders/RotationFragment.glsl";
+const char* pVSFileName = "Shaders/ShadersVertexColors.glsl";
+const char* pFSFileName = "Shaders/ShadersFragmentColors.glsl";
 
 static void CompileShaders()
 {
@@ -120,12 +107,6 @@ static void CompileShaders()
         exit(1);
     }
 
-    gRotationLocation = glGetUniformLocation(ShaderProgram, "gRotation");
-    if (gRotationLocation == -1) {
-        printf("Error getting uniform location of 'gRotation'\n");
-        exit(1);
-    }
-
     glValidateProgram(ShaderProgram);
     glGetProgramiv(ShaderProgram, GL_VALIDATE_STATUS, &Success);
     if (!Success) {
@@ -148,7 +129,7 @@ int main(int argc, char** argv)
     int x = 200;
     int y = 100;
     glutInitWindowPosition(x, y);
-    int win = glutCreateWindow("Tutorial 07");
+    int win = glutCreateWindow("Tutorial 04");
     printf("window id: %d\n", win);
 
     // Must be done after glut is initialized!

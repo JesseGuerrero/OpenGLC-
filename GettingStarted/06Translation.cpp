@@ -1,30 +1,46 @@
 #include <stdio.h>
 #include <string.h>
+
+#include <math.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
 #include "ogldev/ogldev_math_3d.h"
-#include "jesse.h"
+#include "ogldev/jesse/jesse.h"
 
 GLuint VBO;
-
+GLint gTranslationLocation;
 
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
+    static float Scale = 0.0f;
+    static float Delta = 0.005f;
+
+    Scale += Delta;
+    if ((Scale >= 0.8f) || (Scale <= -0.8f)) {
+        Delta *= -1.0f;
+    }
+
+    Matrix4f Translation(1.0f, 0.0f, 0.0f, Scale,
+                         0.0f, 1.0f, 0.0f, Scale,
+                         0.0f, 0.0f, 1.0f, 0.0,
+                         0.0f, 0.0f, 0.0f, 1.0f);
+
+    glUniformMatrix4fv(gTranslationLocation, 1, GL_TRUE, &Translation.m[0][0]);
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glDisableVertexAttribArray(0);
+
+    glutPostRedisplay();
 
     glutSwapBuffers();
 }
@@ -32,13 +48,10 @@ static void RenderSceneCB()
 
 static void CreateVertexBuffer()
 {
-    Vector3f Vertices[6];
-    Vertices[0] = Vector3f(-1.0f, -1.0f, 0.0f);   // bottom left
-    Vertices[1] = Vector3f(1.0f, 0.0f, 0.0f);   // color
-    Vertices[2] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
-    Vertices[3] = Vector3f(0.0f, 1.0f, 0.0f);   // color
-    Vertices[4] = Vector3f(0.0f, 1.0f, 0.0f);     // top
-    Vertices[5] = Vector3f(0.0f, 0.0f, 1.0f);   // color
+    Vector3f Vertices[3];
+    Vertices[0] = Vector3f(-0.3f, -0.3f, 0.0f);   // bottom left
+    Vertices[1] = Vector3f(0.3f, -0.3f, 0.0f);    // bottom right
+    Vertices[2] = Vector3f(0.0f, 0.3f, 0.0f);     // top
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -51,7 +64,7 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
 
     if (ShaderObj == 0) {
         fprintf(stderr, "Error creating shader type %d\n", ShaderType);
-        exit(0);
+        exit(1);
     }
 
     const GLchar* p[1];
@@ -77,8 +90,8 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
     glAttachShader(ShaderProgram, ShaderObj);
 }
 
-const char* pVSFileName = "Shaders/ShadersVertexColors.glsl";
-const char* pFSFileName = "Shaders/ShadersFragmentColors.glsl";
+const char* pVSFileName = "Shaders/TranslationVertex.glsl";
+const char* pFSFileName = "Shaders/TranslationFragment.glsl";
 
 static void CompileShaders()
 {
@@ -91,7 +104,6 @@ static void CompileShaders()
 
     std::string vs = ReadFileJesse(pVSFileName);
     std::string fs = ReadFileJesse(pFSFileName);
-
     AddShader(ShaderProgram, vs.c_str(), GL_VERTEX_SHADER);
     AddShader(ShaderProgram, fs.c_str(), GL_FRAGMENT_SHADER);
 
@@ -104,6 +116,12 @@ static void CompileShaders()
     if (Success == 0) {
         glGetProgramInfoLog(ShaderProgram, sizeof(ErrorLog), NULL, ErrorLog);
         fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
+        exit(1);
+    }
+
+    gTranslationLocation = glGetUniformLocation(ShaderProgram, "gTranslation");
+    if (gTranslationLocation == -1) {
+        printf("Error getting uniform location of 'gTranslation'\n");
         exit(1);
     }
 
@@ -122,14 +140,14 @@ int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
-    int width = 1920;
-    int height = 1080;
+    int width = 800;
+    int height = 600;
     glutInitWindowSize(width, height);
 
-    int x = 200;
+    int x = 100;
     int y = 100;
     glutInitWindowPosition(x, y);
-    int win = glutCreateWindow("Tutorial 04");
+    int win = glutCreateWindow("Tutorial 06");
     printf("window id: %d\n", win);
 
     // Must be done after glut is initialized!

@@ -8,8 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <learnopengl/filesystem.h>
-#include <jesseShader.h>
+#include "learnopengl/filesystem.h"
+#include "ogldev/jesse/jesseShader.h"
 
 #include <iostream>
 

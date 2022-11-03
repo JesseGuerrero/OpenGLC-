@@ -10,13 +10,8 @@
 
 
 #include "ogldev/ogldev_math_3d.h"
-#include "jesseShader.h"
+#include "ogldev/jesse/jesseShader.h"
 
-
-/*
- * TODO: UNFINISHED
- *
- * */
 GLuint VBO;
 GLint gRotationLocation;
 Shader *ourShader;
