@@ -18,7 +18,7 @@ static void CreateVertexBuffer()
 //    Vertices[0] = Vector3f(-1.0f, -1.0f, 0.0f);   // bottom left
 //    Vertices[1] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
 //    Vertices[2] = Vector3f(0.0f, 1.0f, 0.0f);     // top
-    ourShader = (Shader*)(new Shader("Shaders/TextureLearnOpenGLSampleVertex.glsl", "Shaders/TextureLearnOpenGLSampleFragment.glsl"));
+    ourShader = (Shader*)(new Shader("../Shaders/TextureLearnOpenGLSampleVertex.glsl", "../Shaders/TextureLearnOpenGLSampleFragment.glsl"));
     float Vertices[] = {
             // positions                         // colors                    // texture coords
             0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
@@ -66,7 +66,7 @@ static void CreateVertexBuffer()
                 // load image, create texture and generate mipmaps
                 int width, height, nrChannels;
                 // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-                unsigned char *data = stbi_load(FileSystem::getPath("Images/container.jpg").c_str(), &width, &height, &nrChannels, 0);
+                unsigned char *data = stbi_load(FileSystem::getPath("../Images/container.jpg").c_str(), &width, &height, &nrChannels, 0);
                 if (data)
                 {
                     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

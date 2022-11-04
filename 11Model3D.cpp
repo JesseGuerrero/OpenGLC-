@@ -40,10 +40,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
     // glfw window creation
     // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
@@ -78,11 +74,11 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Shader ourShader("Shaders/11Model3DVertex.glsl", "Shaders/11Model3DFragment.glsl");
+    Shader ourShader("../Shaders/Model3DVertex.glsl", "../Shaders/Model3DFragment.glsl");
 
     // load models
     // -----------
-    Model ourModel(FileSystem::getPath("Assets/backpack/backpack.obj"));
+    Model ourModel(FileSystem::getPath("../Assets/backpack/backpack.obj"));
 
 
     // draw in wireframe

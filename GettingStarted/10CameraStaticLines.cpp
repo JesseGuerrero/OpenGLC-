@@ -74,7 +74,7 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader ourShader("Shaders/CameraVertexDots.glsl", "Shaders/CameraFragmentDots.glsl");
+    Shader ourShader("../Shaders/CameraVertexDots.glsl", "../Shaders/CameraFragmentDots.glsl");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
