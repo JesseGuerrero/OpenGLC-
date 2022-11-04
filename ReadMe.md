@@ -9,4 +9,4 @@ Use this with your own clone of vcpkg: -DCMAKE_TOOLCHAIN_FILE="D:\Other\New fold
 <i>Links</i><br>
 VCPKG Github: https://github.com/microsoft/vcpkg<br>
 Visual Studio ToolChain: https://visualstudio.microsoft.com/downloads/<br>
-Manifest mode tutorial: https://vcpkg.io/en/docs/examples/manifest-mode-cmake.html
+Manifest mode(virtual environments) tutorial: https://vcpkg.io/en/docs/examples/manifest-mode-cmake.html
