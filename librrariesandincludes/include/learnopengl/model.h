@@ -1,6 +1,3 @@
-#ifndef MODEL_H
-#define MODEL_H
-
 #include <glad/glad.h>
 
 #include <glm/glm.hpp>
@@ -12,7 +9,7 @@
 #include <assimp/postprocess.h>
 
 #include <learnopengl/mesh.h>
-#include <learnopengl/shader_m.h>
+#include <learnopengl/shader.h>
 
 #include <string>
 #include <fstream>
@@ -243,4 +240,3 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 
     return textureID;
 }
-#endif
