@@ -19,10 +19,6 @@ static void RenderSceneCB()
     static float Delta = 0.01f;
 
     AngleInRadians += Delta;
-    if ((AngleInRadians >= 1.5708f) || (AngleInRadians <= -1.5708f)) {
-        Delta *= -1.0f;
-    }
-
     Matrix4f Rotation(cosf(AngleInRadians), -sinf(AngleInRadians), 0.0f, 0.0f,
                       sinf(AngleInRadians), cosf(AngleInRadians),  0.0f, 0.0f,
                       0.0,                  0.0f,                  1.0f, 0.0f,
@@ -49,9 +45,9 @@ static void RenderSceneCB()
 static void CreateVertexBuffer()
 {
     Vector3f Vertices[3];
-    Vertices[0] = Vector3f(-1.0f, -1.0f, 0.0f);   // bottom left
-    Vertices[1] = Vector3f(1.0f, -1.0f, 0.0f);    // bottom right
-    Vertices[2] = Vector3f(0.0f, 1.0f, 0.0f);     // top
+    Vertices[0] = Vector3f(-0.5f, -0.5f, 0.0f);   // bottom left
+    Vertices[1] = Vector3f(0.5f, -0.5f, 0.0f);    // bottom right
+    Vertices[2] = Vector3f(0.0f, 0.5f, 0.0f);     // top
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -90,8 +86,8 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
     glAttachShader(ShaderProgram, ShaderObj);
 }
 
-const char* pVSFileName = "Shaders/RotationVertex.glsl";
-const char* pFSFileName = "Shaders/RotationFragment.glsl";
+const char* pVSFileName = "../Shaders/RotationVertex.glsl";
+const char* pFSFileName = "../Shaders/RotationFragment.glsl";
 
 static void CompileShaders()
 {
@@ -137,8 +133,13 @@ static void CompileShaders()
     glUseProgram(ShaderProgram);
 }
 
+
+#include <iostream>
+#include <filesystem>
 int main(int argc, char** argv)
 {
+    std::filesystem::path currentPath = std::filesystem::current_path();
+    std::cout << "Current Path: " << currentPath << std::endl;
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
     int width = 1920;
